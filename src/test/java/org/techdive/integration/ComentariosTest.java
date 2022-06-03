@@ -9,8 +9,7 @@ import org.techdive.dto.LoginRequest;
 import org.techdive.dto.VideoRequest;
 
 import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -85,6 +84,31 @@ public class ComentariosTest {
 
     @Test
     @Order(4)
+    public void consultarComentariosDoVideo() {
+        given()
+                .when()
+                .get("/videos/{idVideo}/comentarios", idVideo)
+                .then()
+                .statusCode(200)
+                .body("$", not(empty()))
+                .body("$", hasSize(1));
+    }
+
+    @Test
+    @Order(5)
+    public void consultarComentarioDoVideoPorId() {
+        given()
+                .when()
+                .get("/videos/{idVideo}/comentarios/{idComentario}", idVideo, idComentario)
+                .then()
+                .statusCode(200)
+                .body("id", notNullValue())
+                .body("id", is(idComentario.intValue()))
+                .body("texto", is("mensagem de comentario"));
+    }
+
+    @Test
+    @Order(6)
     public void apagarComentario() {
         given()
                 .header("Authorization", "Bearer " + tokenJWT)
@@ -95,7 +119,7 @@ public class ComentariosTest {
     }
 
     @Test
-    @Order(5)
+    @Order(7)
     public void apagarVideo() {
         given()
                 .header("Authorization", "Bearer " + tokenJWT)

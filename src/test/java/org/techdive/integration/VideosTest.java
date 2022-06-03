@@ -118,6 +118,31 @@ public class VideosTest {
 
     @Test
     @Order(7)
+    public void removerLikeNoVideo() {
+        given()
+                .header("Authorization", "Bearer " + tokenJWT)
+                .when()
+                .delete("/videos/{id}/like", idVideo)
+                .then()
+                .statusCode(200)
+                .body("id", is(idVideo))
+                .body("likes", is(0));
+    }
+
+    @Test
+    @Order(8)
+    public void visualizarVideo() {
+        given()
+                .when()
+                .get("/videos/{id}/visualizacao", idVideo)
+                .then()
+                .statusCode(200)
+                .body("id", is(idVideo))
+                .body("visualizacoes", is(1));
+    }
+
+    @Test
+    @Order(9)
     public void apagarVideo() {
         given()
                 .header("Authorization", "Bearer " + tokenJWT)
